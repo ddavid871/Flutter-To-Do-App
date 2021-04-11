@@ -20,8 +20,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f60b6778-2f4f-4268-b715-dc6b513db885" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/lib/models/calendar_item.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/calendar_widget.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/widgets/calendar_widget.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/tasks_widget.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/widgets/tasks_widget.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utilities/est_time_picker.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/utilities/est_time_picker.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utilities/theme_bloc.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/utilities/theme_bloc.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utilities/time_input.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/utilities/time_input.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utilities/utils.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/utilities/utils.dart" afterDir="false" />
+    </list>
+    <list id="465e09b3-ab4f-4522-a619-85d715e36c9a" name="Ignore" comment="">
+      <change beforePath="$PROJECT_DIR$/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins-dependencies" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,7 +50,9 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1qrTvTZwBSWkT9GZ6IoIf59HVQe" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -58,11 +70,11 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\danid\AndroidStudioProjects\flutter_tasks\lib\utilities" />
-      <recent name="C:\Users\danid\AndroidStudioProjects\flutter_tasks\lib\models" />
-      <recent name="C:\Users\danid\AndroidStudioProjects\flutter_tasks\lib" />
-      <recent name="C:\Users\danid\AndroidStudioProjects\flutter_tasks\lib\tasks" />
-      <recent name="C:\Users\danid\AndroidStudioProjects\flutter_tasks\lib\example" />
+      <recent name="$PROJECT_DIR$/lib/widgets" />
+      <recent name="$PROJECT_DIR$/lib/utilities" />
+      <recent name="$PROJECT_DIR$/lib/models" />
+      <recent name="$PROJECT_DIR$/lib/" />
+      <recent name="$PROJECT_DIR$/lib/tasks" />
     </key>
   </component>
   <component name="SvnConfiguration">
@@ -71,6 +83,7 @@
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="f60b6778-2f4f-4268-b715-dc6b513db885" name="Default Changelist" comment="" />
+      <changelist id="465e09b3-ab4f-4522-a619-85d715e36c9a" name="Ignore" comment="" />
       <created>1617836939853</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -90,7 +103,14 @@
       <option name="project" value="LOCAL" />
       <updated>1618111032902</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Init push">
+      <created>1618111163361</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1618111163361</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -117,22 +137,22 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="498" y="278" key="FileChooserDialogImpl/0.0.1920.1040/1920.42.1280.984@0.0.1920.1040" timestamp="1617840544933" />
-    <state width="1396" height="240" key="GridCell.Tab.0.bottom" timestamp="1618110917061">
+    <state width="1396" height="240" key="GridCell.Tab.0.bottom" timestamp="1618111659498">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1396" height="240" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.42.1280.984@0.0.1920.1040" timestamp="1618110917061" />
-    <state width="1396" height="240" key="GridCell.Tab.0.center" timestamp="1618110917061">
+    <state width="1396" height="240" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.42.1280.984@0.0.1920.1040" timestamp="1618111659498" />
+    <state width="1396" height="240" key="GridCell.Tab.0.center" timestamp="1618111659498">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1396" height="240" key="GridCell.Tab.0.center/0.0.1920.1040/1920.42.1280.984@0.0.1920.1040" timestamp="1618110917061" />
-    <state width="1396" height="240" key="GridCell.Tab.0.left" timestamp="1618110917060">
+    <state width="1396" height="240" key="GridCell.Tab.0.center/0.0.1920.1040/1920.42.1280.984@0.0.1920.1040" timestamp="1618111659498" />
+    <state width="1396" height="240" key="GridCell.Tab.0.left" timestamp="1618111659498">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1396" height="240" key="GridCell.Tab.0.left/0.0.1920.1040/1920.42.1280.984@0.0.1920.1040" timestamp="1618110917060" />
-    <state width="1396" height="240" key="GridCell.Tab.0.right" timestamp="1618110917061">
+    <state width="1396" height="240" key="GridCell.Tab.0.left/0.0.1920.1040/1920.42.1280.984@0.0.1920.1040" timestamp="1618111659498" />
+    <state width="1396" height="240" key="GridCell.Tab.0.right" timestamp="1618111659498">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1396" height="240" key="GridCell.Tab.0.right/0.0.1920.1040/1920.42.1280.984@0.0.1920.1040" timestamp="1618110917061" />
+    <state width="1396" height="240" key="GridCell.Tab.0.right/0.0.1920.1040/1920.42.1280.984@0.0.1920.1040" timestamp="1618111659498" />
     <state width="1391" height="281" key="GridCell.Tab.2.bottom" timestamp="1617868114681">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -153,10 +173,14 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="198" y="98" key="SettingsEditor/0.0.1920.1040/1920.42.1280.984@0.0.1920.1040" timestamp="1617840644825" />
-    <state x="312" y="257" key="Vcs.Push.Dialog.v2" timestamp="1618110962683">
+    <state x="567" y="439" key="VCS.ChangelistChooser" timestamp="1618111866791">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="312" y="257" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.42.1280.984@0.0.1920.1040" timestamp="1618110962683" />
+    <state x="567" y="439" key="VCS.ChangelistChooser/0.0.1920.1040/1920.42.1280.984@0.0.1920.1040" timestamp="1618111866791" />
+    <state x="312" y="257" key="Vcs.Push.Dialog.v2" timestamp="1618111164366">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="312" y="257" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.42.1280.984@0.0.1920.1040" timestamp="1618111164366" />
     <state x="1920" y="42" width="1206" height="720" maximized="true" key="dock-window-1" timestamp="1618095396711">
       <screen x="1920" y="42" width="1280" height="984" />
     </state>

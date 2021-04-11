@@ -1,5 +1,8 @@
+// File based on the Flutter To-Do App by MobMaxime
+// Source: https://github.com/MobMaxime/Flutter-To-Do-App
+
 import 'package:flutter/material.dart';
-import 'models/task.dart';
+import 'package:flutter_tasks/models/task.dart';
 
 class TaskWidget extends StatefulWidget {
   const TaskWidget({Key key}) : super(key: key);
@@ -8,10 +11,6 @@ class TaskWidget extends StatefulWidget {
   _TodoListState createState() => _TodoListState();
 }
 
-
-// CONT: https://github.com/MobMaxime/Flutter-To-Do-App
-
-
 class _TodoListState extends State<TaskWidget> {
   List<Task> _todoItems = [];
 
@@ -19,7 +18,6 @@ class _TodoListState extends State<TaskWidget> {
 
   @override
   Widget build(BuildContext context) {
-    // fixme - different divisions
     return Container(
         padding: EdgeInsets.only(left: 16),
         child: Scaffold(
@@ -31,7 +29,7 @@ class _TodoListState extends State<TaskWidget> {
               trailing: IconButton(
                 icon: Icon((_isSelected) ? Icons.check_box : Icons
                     .check_box_outline_blank),
-                onPressed: () { // fixme - change text color and strikethru?
+                onPressed: () {
                   setState(() {
                     _isSelected = !_isSelected;
                   });

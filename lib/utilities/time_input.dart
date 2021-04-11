@@ -1,8 +1,5 @@
-// Copyright 2014 The Flutter Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
-// @dart = 2.8
+// Modified from the TimeOfDay class in time.dart
+// Original found here: https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/material/time.dart
 
 import 'dart:ui' show hashValues;
 
@@ -15,7 +12,7 @@ class TimeInput {
   const TimeInput({ @required this.hour, @required this.minute });
 
   // The number of hours in one work day, i.e. 8.
-  static const int hoursPerWorkDay = 8;
+  static const int hoursPerWorkDay = 8; // TODO - make useful
 
   // The number of minutes in one hour, i.e. 60.
   static const int minutesPerHour = 60;

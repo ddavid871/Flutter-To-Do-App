@@ -1,4 +1,3 @@
-//import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tasks/utilities/time_input.dart';
 import 'package:flutter_tasks/utilities/est_time_picker.dart';
@@ -156,14 +155,6 @@ class Utils {
       new DateFormat("d MMM, y").format(selectedDate);
 
   String estTimeFormat(TimeInput picked) {
-    int minute = picked.minute;
-    var pickedMinute;
-    if (minute % 100 < 10) {
-      pickedMinute = "0" + minute.toString();
-    } else {
-      pickedMinute = minute.toString();
-    }
-
     var hourValue = "${picked.hour} hour";
     var minValue = "${picked.minute} minute";
 

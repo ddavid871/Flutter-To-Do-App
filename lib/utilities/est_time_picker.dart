@@ -1,8 +1,5 @@
-// Copyright 2014 The Flutter Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
-// @dart = 2.8
+// Modified from the Flutter TimePicker widget
+// Original can be found here: https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/material/time_picker.dart
 
 import 'dart:async';
 import 'dart:math' as math;
@@ -12,10 +9,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
-import 'time_input.dart';
-
-// Examples can assume:
-// BuildContext context;
+import 'package:flutter_tasks/utilities/time_input.dart';
 
 const Duration _kDialogSizeAnimationDuration = Duration(milliseconds: 200);
 const Duration _kVibrateCommitDelay = Duration(milliseconds: 100);
@@ -560,8 +554,6 @@ class _TimePickerDialogState extends State<_TimePickerDialog> {
   }
 
   Size _dialogSize(BuildContext context) {
-    final Orientation orientation = MediaQuery.of(context).orientation;
-    final ThemeData theme = Theme.of(context);
     // Constrain the textScaleFactor to prevent layout issues. Since only some
     // parts of the time picker scale up with textScaleFactor, we cap the factor
     // to 1.1 as that provides enough space to reasonably fit all the content.
@@ -579,11 +571,8 @@ class _TimePickerDialogState extends State<_TimePickerDialog> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasMediaQuery(context));
-    final MediaQueryData media = MediaQuery.of(context);
-    final TimeInputFormat timeInputFormat = TimeInputFormat.HH_colon_mm;
     final ThemeData theme = Theme.of(context);
     final ShapeBorder shape = TimePickerTheme.of(context).shape ?? _kDefaultShape;
-    final Orientation orientation = media.orientation;
 
     final Widget actions = Row(
       children: <Widget>[

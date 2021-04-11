@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tasks/screens/todo_list.dart';
 
-import 'calendar_widget.dart';
+import 'package:flutter_tasks/widgets/calendar_widget.dart';
 
 void main() {
   runApp(MyApp());
