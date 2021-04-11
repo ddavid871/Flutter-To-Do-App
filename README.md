@@ -1,6 +1,6 @@
 # flutter_tasks
 
-A new Flutter application.
+A Flutter application made to handle scheduling tasks for you.
 
 ## Getting Started
 
