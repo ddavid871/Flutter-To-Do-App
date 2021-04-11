@@ -1,47 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:to_do/screens/new_task.dart';
+import 'package:flutter_tasks/screens/new_task.dart';
 import 'dart:async';
-import 'package:to_do/models/task.dart';
-import 'package:to_do/utilities/database_helper.dart';
+import 'package:flutter_tasks/models/task.dart';
+import 'package:flutter_tasks/utilities/database_helper.dart';
+import 'package:flutter_tasks/utilities/strings.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:to_do/custom widgets/CustomWidget.dart';
-import 'package:to_do/utilities/theme_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:to_do/localizations.dart';
-import 'package:to_do/utilities/utils.dart';
+import 'package:flutter_tasks/widgets/custom_widget.dart';
+import 'package:flutter_tasks/utilities/utils.dart';
 
-class todo extends StatefulWidget {
-  final bool darkThemeEnabled;
-  todo(this.darkThemeEnabled);
-
+class TodoWidget extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return todo_state();
+    return TodoState();
   }
 }
 
-class todo_state extends State<todo> {
-  DatabaseHelper databaseHelper = DatabaseHelper();
+class TodoState extends State<TodoWidget> {
+  DatabaseHelper databaseHelper = DatabaseHelper.instance;
   Utils utility = new Utils();
   List<Task> taskList;
   int count = 0;
-  String _themeType;
   final homeScaffold = GlobalKey<ScaffoldState>();
-
-  @override
-  void initState() {
-    if (!widget.darkThemeEnabled) {
-      _themeType = 'Light Theme';
-    } else {
-      _themeType = 'Dark Theme';
-    }
-    super.initState();
-  }
-
-  _setPref(bool res) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('darkTheme', res);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,32 +35,9 @@ class todo_state extends State<todo> {
           key: homeScaffold,
           appBar: AppBar(
             title: Text(
-              AppLocalizations.of(context).title(),
+              'Tasks',
               style: TextStyle(fontSize: 25),
             ),
-            actions: <Widget>[
-              PopupMenuButton<bool>(
-                onSelected: (res) {
-                  bloc.changeTheme(res);
-                  _setPref(res);
-                  setState(() {
-                    if (_themeType == 'Dark Theme') {
-                      _themeType = 'Light Theme';
-                    } else {
-                      _themeType = 'Dark Theme';
-                    }
-                  });
-                },
-                itemBuilder: (context) {
-                  return <PopupMenuEntry<bool>>[
-                    PopupMenuItem<bool>(
-                      value: !widget.darkThemeEnabled,
-                      child: Text(_themeType),
-                    )
-                  ];
-                },
-              )
-            ],
             bottom: TabBar(tabs: [
               Tab(
                 icon: Icon(Icons.format_list_numbered_rtl),
@@ -90,7 +46,7 @@ class todo_state extends State<todo> {
                 icon: Icon(Icons.playlist_add_check),
               )
             ]),
-          ), //AppBar
+          ),
           body: TabBarView(children: [
             new Container(
               padding: EdgeInsets.all(8.0),
@@ -118,8 +74,7 @@ class todo_state extends State<todo> {
                                   (BuildContext context, int position) {
                                 return new GestureDetector(
                                     onTap: () {
-                                      if (snapshot.data[position].status !=
-                                          "Task Completed")
+                                      if (snapshot.data[position].status != Strings.taskCompleted)
                                         navigateToTask(snapshot.data[position],
                                             "Edit Task", this);
                                     },
@@ -132,8 +87,7 @@ class todo_state extends State<todo> {
                                         sub2: snapshot.data[position].time,
                                         status: snapshot.data[position].status,
                                         delete:
-                                          snapshot.data[position].status ==
-                                                    "Task Completed"
+                                            snapshot.data[position].status == Strings.taskCompleted
                                                 ? IconButton(
                                                     icon: Icon(Icons.delete),
                                                     onPressed: null,
@@ -145,8 +99,7 @@ class todo_state extends State<todo> {
                                           size: 28,
                                         ),
                                       ),
-                                    ) //Card
-                                    );
+                                    ));
                               });
                         }
                       },
@@ -154,7 +107,7 @@ class todo_state extends State<todo> {
                   )
                 ],
               ),
-            ),//Container
+            ),
             new Container(
               padding: EdgeInsets.all(8.0),
               child: ListView(
@@ -181,40 +134,36 @@ class todo_state extends State<todo> {
                                   (BuildContext context, int position) {
                                 return new GestureDetector(
                                     onTap: () {
-                                      if (snapshot.data[position].status !=
-                                          "Task Completed")
+                                      if (snapshot.data[position].status != Strings.taskCompleted)
                                         navigateToTask(snapshot.data[position],
                                             "Edit Task", this);
+                                      else navigateToTask(snapshot.data[position],
+                                          "Completed Task", this);
                                     },
                                     child: Card(
                                       margin: EdgeInsets.all(1.0),
                                       elevation: 2.0,
                                       child: CustomWidget(
-                                        title: snapshot.data[position].task,
-                                        sub1: snapshot.data[position].date,
-                                        sub2: snapshot.data[position].time,
-                                        status: snapshot.data[position].status,
-                                        delete:
-                                        snapshot.data[position].status ==
-                                            "Task Completed"
-                                            ? IconButton(
-                                          icon: Icon(Icons.delete,
-                                          color: Theme.of(context).primaryColor,
-                                          size: 28),
-                                          onPressed: (){
-                                            delete(snapshot.data[position].id);
-                                          },
-                                        )
-                                            : Container(),
-                                        trailing: Container()
-//                                    Icon(
-//                                          Icons.edit,
-//                                          color: Theme.of(context).primaryColor,
-//                                          size: 28,
-//                                        ),
-                                      ),
-                                    ) //Card
-                                );
+                                          title: snapshot.data[position].task,
+                                          sub1: snapshot.data[position].date,
+                                          sub2: snapshot.data[position].time,
+                                          status: snapshot.data[position].status,
+                                          delete:
+                                              snapshot.data[position].status == Strings.taskCompleted
+                                              ? IconButton(
+                                                  icon: Icon(
+                                                      Icons.delete,
+                                                      color: Theme.of(context).primaryColor,
+                                                      size: 28
+                                                  ),
+                                                  onPressed: () {
+                                                    delete(snapshot.data[position].id);
+                                                  },
+                                                )
+                                              : Container(),
+                                          trailing: Container()
+                                          ),
+                                    ));
                               });
                         }
                       },
@@ -222,24 +171,21 @@ class todo_state extends State<todo> {
                   )
                 ],
               ),
-            ),//Container
-          ]
-
-          ),
+            ),
+          ]),
           floatingActionButton: FloatingActionButton(
               tooltip: "Add Task",
               child: Icon(Icons.add),
               onPressed: () {
-                navigateToTask(Task('', '', '', ''), "Add Task", this);
-              }), //FloatingActionButton
+                navigateToTask(Task('', '', '', '', 1, 0, ''), "Add Task", this); // TODO: Settings -> default est task time
+              }),
         ));
-  } //build()
+  }
 
-
-  void navigateToTask(Task task, String title, todo_state obj) async {
+  void navigateToTask(Task task, String title, TodoState obj) async {
     bool result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => new_task(task, title, obj)),
+      MaterialPageRoute(builder: (context) => NewTask(task, title, obj)),
     );
     if (result == true) {
       updateListView();
@@ -258,12 +204,12 @@ class todo_state extends State<todo> {
         });
       });
     });
-  } //updateListView()
+  }
 
   void delete(int id) async {
-      await databaseHelper.deleteTask(id);
-      updateListView();
-      //Navigator.pop(context);
+    await databaseHelper.deleteTask(id);
+    updateListView();
+    // Navigator.pop(context);
     utility.showSnackBar(homeScaffold, 'Task Deleted Successfully');
   }
 }

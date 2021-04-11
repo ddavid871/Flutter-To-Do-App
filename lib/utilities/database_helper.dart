@@ -1,140 +1,162 @@
-import 'package:sqflite/sqflite.dart';
-import 'dart:async';
 import 'dart:io';
+
+import 'package:flutter_tasks/utilities/strings.dart';
+import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:to_do/models/task.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:flutter_tasks/models/task.dart';
 
 class DatabaseHelper {
+  static final _databaseName = "tasks.db";
+  static final _databaseVersion = 1;
 
-  static DatabaseHelper _databaseHelper; //Singleton DatabaseHelper
-  static Database _database; //Singleton Database
+  static final taskTable = 'task_table';
 
-  String taskTable = "task_table";
-  String colId = "id";
-  String colTask = "task";
-  String colDate = "date";
-  String colTime = "time";
-  String colStatus = "status";
+  static final colId = 'id';
+  static final colTask = 'task';
+  static final colDate = 'date';
+  static final colTime = 'time';
+  static final colEstTime = "estTime";
+  static final colEstTimeHour = "estTimeHour";
+  static final colEstTimeMinute = "estTimeMinute";
+  static final colStatus = 'status';
 
-  DatabaseHelper._createInstance();
+  DatabaseHelper._privateConstructor();
+  static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
 
-  factory DatabaseHelper() {
-    if (_databaseHelper == null) {
-      _databaseHelper = DatabaseHelper._createInstance();
-    }
-    return _databaseHelper;
-  }
-
+  static Database _database;
   Future<Database> get database async {
-    if (_database == null) {
-      _database = await initializeDatabase();
-    }
+    if (_database != null) return _database;
+    _database = await _initDatabase();
     return _database;
   }
 
+  _initDatabase() async {
+    String path = join(await getDatabasesPath(), _databaseName);
+    return await openDatabase(path,
+        version: _databaseVersion, onCreate: _onCreate);
+  }
+
   Future<Database> initializeDatabase() async {
-    //Get the directory path for both Android and iOS to store Database.
+    // Get the directory path for both Android and iOS to store Database.
     Directory directory = await getApplicationDocumentsDirectory();
     String path = directory.path + "task.db";
 
-    //Open/Create the database at the given path
+    // Open/Create the database at the given path
     var taskDatabase =
-        await openDatabase(path, version: 1, onCreate: _createDb);
+    await openDatabase(path, version: 1, onCreate: _onCreate);
 
     return taskDatabase;
   }
 
-  void _createDb(Database db, int newVersion) async {
-    await db.execute(
-        'CREATE TABLE $taskTable ($colId INTEGER PRIMARY KEY AUTOINCREMENT, $colTask TEXT, $colDate TEXT, $colTime TEXT, $colStatus TEXT)');
+  // SQL code to create the database table
+  Future _onCreate(Database db, int version) async {
+    await db.execute('''
+          CREATE TABLE $taskTable (
+            $colId INTEGER PRIMARY KEY AUTOINCREMENT,
+            $colTask TEXT NOT NULL,
+            $colDate TEXT,
+            $colTime TEXT,
+            $colEstTime TEXT,
+            $colEstTimeHour INTEGER,
+            $colEstTimeMinute INTEGER,
+            $colStatus TEXT
+          )
+          ''');
   }
 
-  //Fetch Operation: Get all Task objects from database
+  // Fetch Operation: Get all Task objects from database
   Future<List<Map<String, dynamic>>> getTaskMapList() async {
-    Database db = await this.database;
-    //var result = db.rawQuery('SELECT * FROM $taskTable order by $colDate, $colTime ASC');
+    Database db = await instance.database;
+    //var result = await db.query(taskTable, orderBy: "$colId DESC");
     var result = db.query(taskTable, orderBy: '$colStatus, $colDate, $colTime');
     return result;
   }
 
   Future<List<Map<String, dynamic>>> getInCompleteTaskMapList() async {
-    Database db = await this.database;
-    var result = db.rawQuery('SELECT * FROM $taskTable where $colStatus = "" order by $colDate, $colTime ASC');
+    Database db = await instance.database;
+    var result = db.rawQuery('SELECT * FROM $taskTable where $colStatus != "${Strings.taskCompleted}" order by $colDate, $colTime ASC');
     //var result = db.query(taskTable, orderBy: '$colStatus, $colDate, $colTime');
     return result;
   }
 
   Future<List<Map<String, dynamic>>> getCompleteTaskMapList() async {
-    Database db = await this.database;
-    var result = db.rawQuery('SELECT * FROM $taskTable where $colStatus = "Task Completed" order by $colDate, $colTime ASC');
+    Database db = await instance.database;
+    var result = db.rawQuery('SELECT * FROM $taskTable where $colStatus = "${Strings.taskCompleted}" order by $colDate, $colTime ASC');
     //var result = db.query(taskTable, orderBy: '$colStatus, $colDate, $colTime');
     return result;
   }
 
-
-
-  //Insert Operation: Insert a Task object to database
+  // Insert Operation: Insert a Task object to database
   Future<int> insertTask(Task task) async {
-    Database db = await this.database;
+    Database db = await instance.database;
     var result = await db.insert(taskTable, task.toMap());
     return result;
   }
 
-  //Update Operation: Update a Task object and save it to database
+  // Update Operation: Update a Task object and save it to database
   Future<int> updateTask(Task task) async {
-    var db = await this.database;
+    var db = await instance.database;
     var result = await db.update(taskTable, task.toMap(), where: '$colId = ?', whereArgs: [task.id] );
     return result;
   }
 
-  //Delete Operation: Delete a Task object from database
-  Future<int> deleteTask(int id) async{
-    var db = await this.database;
-    int result = await db.rawDelete('DELETE FROM $taskTable WHERE $colId=$id');
-    return result;
+  // Delete Operation: Delete a Task object from database
+  Future<int> deleteTask(int id) async {
+    Database db = await instance.database;
+    return await db.delete(taskTable, where: '$colId = ?', whereArgs: [id]);
   }
 
-  //Get no. of Task objects in database
+  // Get number of Task objects in database
   Future<int> getCount() async{
-    Database db = await this.database;
+    Database db = await instance.database;
     List<Map<String, dynamic>> x = await db.rawQuery('SELECT COUNT (*) FROM $taskTable');
     int result = Sqflite.firstIntValue(x);
     return result;
   }
 
-  Future<List<Task>> getTaskList() async{
-    var taskMapList = await getTaskMapList(); //Get Map List from database
+  Future<List<Task>> getTaskList() async {
+    // Get Map List from database
+    var taskMapList = await getTaskMapList();
     int count = taskMapList.length;
 
     List<Task> taskList = List<Task>();
-    //For loop to create Task List from a Map List
+    // For loop to create Task List from a Map List
     for (int i=0; i<count; i++){
       taskList.add(Task.fromMapObject(taskMapList[i]));
     }
     return taskList;
   }
 
-  Future<List<Task>> getInCompleteTaskList() async{
-    var taskMapList = await getInCompleteTaskMapList(); //Get Map List from database
+  Future<List<Task>> getInCompleteTaskList() async {
+    // Get Map List from database
+    var taskMapList = await getInCompleteTaskMapList();
     int count = taskMapList.length;
 
     List<Task> taskList = List<Task>();
     //For loop to create Task List from a Map List
-    for (int i=0; i<count; i++){
+    for (int i = 0; i < count; i++){
       taskList.add(Task.fromMapObject(taskMapList[i]));
     }
     return taskList;
   }
 
-  Future<List<Task>> getCompleteTaskList() async{
-    var taskMapList = await getCompleteTaskMapList(); //Get Map List from database
+  Future<List<Task>> getCompleteTaskList() async {
+    // Get Map List from database
+    var taskMapList = await getCompleteTaskMapList();
     int count = taskMapList.length;
 
     List<Task> taskList = List<Task>();
-    //For loop to create Task List from a Map List
-    for (int i=0; i<count; i++){
+    // For loop to create Task List from a Map List
+    for (int i = 0; i < count; i++){
       taskList.add(Task.fromMapObject(taskMapList[i]));
     }
     return taskList;
   }
+
+  Future<void> clearTable() async {
+    Database db = await instance.database;
+    return await db.rawQuery("DELETE FROM $taskTable");
+  }
+
 }

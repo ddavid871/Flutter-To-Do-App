@@ -1,20 +1,16 @@
-# To-Do List
+# flutter_tasks
 
-A To-Do Flutter application to manage your TaskList.
+A new Flutter application.
 
-# Android Screenshots of To-Do List Application
+## Getting Started
 
-<img src="Screenshots/ss_1.png" height="300em" /> <img src="Screenshots/ss_2.png" height="300em" /> <img src="Screenshots/ss_3.png" height="300em" /> <img src="Screenshots/ss_4.png" height="300em" /> <img src="Screenshots/ss_5.png" height="300em" /> <img src="Screenshots/ss_6.png" height="300em" /> <img src="Screenshots/ss_7.png" height="300em" /> <img src="Screenshots/ss_8.png" height="300em" /> <img src="Screenshots/ss_9.png" height="300em" /> <img src="Screenshots/ss_10.png" height="300em" /> <img src="Screenshots/ss_11.png" height="300em" /> <img src="Screenshots/ss_12.png" height="300em" /> <img src="Screenshots/ss_13.png" height="300em" /> <img src="Screenshots/ss_14.png" height="300em" /> <img src="Screenshots/ss_15.png" height="300em" />
+This project is a starting point for a Flutter application.
 
-## Application Features
-* Create New Tasks from the Action button.
-* Locally store created Task using database file.
-* Fetch and Display Complete and InComplete Tasks from the locale db file.
-* Mark a Task as Done.
-* Update and Delete feature from the local db file.
-  
----
-## Note about the source code
+A few resources to get you started if this is your first Flutter project:
 
-Please note that I was trying my hands on Flutter. Therefore, there are still things which are not fully implemented or tested.
-Suggestions and Improvements are most Welcomed!  :)
+- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+
+For help getting started with Flutter, view our
+[online documentation](https://flutter.dev/docs), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.

@@ -1,91 +1,87 @@
 import 'package:flutter/material.dart';
-import 'package:to_do/screens/todo_list.dart';
-import 'classes/theme_data.dart';
-import 'package:to_do/utilities/theme_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:to_do/localizations.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_tasks/screens/todo_list.dart';
 
-final routeObserver = RouteObserver<PageRoute>();
+import 'calendar_widget.dart';
 
 void main() {
-  runApp(
-     new MyApp()
-    );
+  runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget{
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _getTheme(),
-      builder: (context, snapshot) {
-        if (snapshot.data == null) {
-          return MaterialApp(
-            onGenerateTitle: (BuildContext context) =>
-                AppLocalizations.of(context).title(),
-            localizationsDelegates: [
-              const AppLocalizationsDelegate(),
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-            ],
-            supportedLocales: [
-              const Locale('en', ''),
-              const Locale('de', ''),
-              const Locale('ru', ''),
-            ],
-            home: Scaffold(
-              body: Center(
-                child: Text("Loading"),
-              ),
-            ),
-          );
-        } else {
-          return StreamBuilder(
-            stream: bloc.darkThemeEnabled,
-            initialData: snapshot.data,
-            builder: (context, snapshot) {
-              if (snapshot.data == null) {
-                return MaterialApp(
-                  home: Scaffold(
-                    body: Center(
-                      child: Text(AppLocalizations.of(context).loadData()),
-                    ),
-                  ),
-                );
-              } else {
-                return MaterialApp(
-                  onGenerateTitle: (BuildContext context) =>
-                      AppLocalizations.of(context).title(),
-                  localizationsDelegates: [
-                    const AppLocalizationsDelegate(),
-                    GlobalMaterialLocalizations.delegate,
-                    GlobalWidgetsLocalizations.delegate,
-                  ],
-                  supportedLocales: [
-                    const Locale('en', ''),
-                    const Locale('de', ''),
-                    const Locale('ru', ''),
-                  ],
-                  debugShowCheckedModeBanner: false,
-                  theme: snapshot.data ? Themes.light : Themes.dark,
-                  navigatorObservers: [routeObserver],
-                  home: todo(snapshot.data),
-                );
-              }
-            },
-          );
-        }
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Task Manager',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      home: MyHomePage(title: 'Tasks'),
+      /*
+      routes: {
+        SettingsScreen.routeName: (ctx) => SettingsScreen(), // setting up routes
       },
+      */
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  MyHomePage({Key key, this.title}) : super(key: key);
+
+  final String title;
+
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+
+  // Navigation
+  int _currentIndex = 0;
+  final List<Widget> _children = [
+    TodoWidget(),
+    CalendarWidget(),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      /*
+      appBar: AppBar(
+        title: Text(widget.title),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.settings),
+            onPressed: null,//() => Navigator.of(context).pushNamed(SettingsScreen.routeName),
+          ),
+        ],
+      ),
+      */
+      body: _children[_currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        onTap: onTabTapped,
+        currentIndex: _currentIndex,
+          items: [
+            new BottomNavigationBarItem(
+              icon: new Icon(Icons.list),
+              label: 'Tasks',
+            ),
+            new BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today_outlined),
+              label: 'Calendar',
+            ),
+          ],
+      ),
     );
   }
 
-  _getTheme() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool val = prefs.getBool('darkTheme');
-    if(val == null){
-      val = true;
-    }
-    return val;
+  void onTabTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
   }
+
 }

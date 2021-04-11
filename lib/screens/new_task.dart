@@ -1,32 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:to_do/utilities/database_helper.dart';
-import 'package:to_do/models/task.dart';
-import 'package:to_do/screens/todo_list.dart';
-import 'package:to_do/utilities/utils.dart';
+import 'package:flutter_tasks/utilities/database_helper.dart';
+import 'package:flutter_tasks/utilities/strings.dart';
+import 'package:flutter_tasks/utilities/utils.dart';
+import 'package:flutter_tasks/models/task.dart';
+import 'package:flutter_tasks/screens/todo_list.dart';
 
 var globalDate = "Pick Date";
 
-class new_task extends StatefulWidget {
+// ignore: must_be_immutable
+class NewTask extends StatefulWidget {
   final String appBarTitle;
   final Task task;
-  todo_state todoState;
-  new_task(this.task, this.appBarTitle, this.todoState);
-  bool _isEditable = false;
+  TodoState todoState;
+
+  NewTask(this.task, this.appBarTitle, this.todoState);
 
   @override
   State<StatefulWidget> createState() {
-    return task_state(this.task, this.appBarTitle, this.todoState);
+    return TaskState(this.task, this.appBarTitle, this.todoState);
   }
 }
 
-class task_state extends State<new_task> {
-
-
-  todo_state todoState;
+class TaskState extends State<NewTask> {
+  TodoState todoState;
   String appBarTitle;
   Task task;
   List<Widget> icons;
-  task_state(this.task, this.appBarTitle, this.todoState);
+
+  TaskState(this.task, this.appBarTitle, this.todoState);
 
   bool marked = false;
 
@@ -38,26 +39,24 @@ class task_state extends State<new_task> {
   TextStyle buttonStyle =
       new TextStyle(fontSize: 18, fontFamily: "Lato", color: Colors.white);
 
-  final scaffoldkey = GlobalKey<ScaffoldState>();
+  final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  DatabaseHelper helper = DatabaseHelper();
+  DatabaseHelper helper = DatabaseHelper.instance;
   Utils utility = new Utils();
   TextEditingController taskController = new TextEditingController();
 
-
   var formattedDate = "Pick Date";
   var formattedTime = "Select Time";
+  var formattedEstTime = "Select Estimated Time";
   var _minPadding = 10.0;
   DateTime selectedDate = DateTime.now();
-  TimeOfDay selectedTime = TimeOfDay();
-
-
+  TimeOfDay selectedTime = TimeOfDay(minute: null, hour: null);
 
   @override
   Widget build(BuildContext context) {
     taskController.text = task.task;
     return Scaffold(
-        key: scaffoldkey,
+        key: scaffoldKey,
         appBar: AppBar(
           leading: new GestureDetector(
             child: Icon(Icons.close, size: 30),
@@ -70,28 +69,11 @@ class task_state extends State<new_task> {
         ),
         body: ListView(children: <Widget>[
           Padding(
-            padding: EdgeInsets.only(right: 50.0),
-            child: _isEditable() ?  CheckboxListTile(
-                title: Text("Mark as Done", style: titleStyle),
-                value: marked,
-                onChanged: (bool value) {
-                 setState(() {
-                   marked = value;
-                 });
-                }
-                )//CheckboxListTile
-            : Container(height: 2,)
-          ),
-
-
-
-          Padding(
             padding: EdgeInsets.all(_minPadding),
             child: TextField(
               controller: taskController,
               decoration: InputDecoration(
-                  labelText: "Task",
-                  hintText: "E.g.  Pick Julie from School",
+                  hintText: "Insert Task Title",
                   labelStyle: TextStyle(
                     fontSize: 20,
                     fontFamily: "Lato",
@@ -101,32 +83,46 @@ class task_state extends State<new_task> {
                       fontSize: 18,
                       fontFamily: "Lato",
                       fontStyle: FontStyle.italic,
-                      color: Colors.grey)), //Input Decoration
+                      color: Colors.grey)),
               onChanged: (value) {
                 updateTask();
               },
-            ), //TextField
-          ), //Padding
-
-       ListTile(
+            ),
+          ), // Task Title
+          Padding(
+              padding: EdgeInsets.only(left: 50.0, right: 50.0),
+              child: _isEditable()
+                  ? CheckboxListTile(
+                      title: Text("Mark as Done", style: titleStyle),
+                      value: (task.status == Strings.taskCompleted) ? true : marked,
+                      onChanged: (bool value) {
+                        setState(() {
+                          marked = value;
+                          task.status = "ETC: ${task.estTime}"; // TODO - % complete
+                        });
+                      })
+                  : Container(
+                      height: 2,
+                    )
+          ), // Mark as Done
+          ListTile(
             title: task.date.isEmpty
                 ? Text(
                     "Pick Date",
                     style: titleStyle,
                   )
                 : Text(task.date),
-            subtitle: Text(""),
+            subtitle: Text("Due Date"),
             trailing: Icon(Icons.calendar_today),
             onTap: () async {
               var pickedDate = await utility.selectDate(context, task.date);
-              if (pickedDate != null && !pickedDate.isEmpty)
+              if (pickedDate != null && pickedDate.isNotEmpty)
                 setState(() {
                   this.formattedDate = pickedDate.toString();
                   task.date = formattedDate;
                 });
             },
-          ), //DateListTile
-
+          ), // Due Date
           ListTile(
             title: task.time.isEmpty
                 ? Text(
@@ -134,27 +130,46 @@ class task_state extends State<new_task> {
                     style: titleStyle,
                   )
                 : Text(task.time),
-            subtitle: Text(""),
+            subtitle: Text("Time Due"),
             trailing: Icon(Icons.access_time),
             onTap: () async {
-              var pickedTime = await utility.selectTime(context);
-              if (pickedTime != null && !pickedTime.isEmpty)
+              var pickedTime = await utility.selectTime(context, task.time);
+              if (pickedTime != null && pickedTime.isNotEmpty)
                 setState(() {
                   formattedTime = pickedTime;
                   task.time = formattedTime;
                 });
             },
-          ), //TimeListTile
-
+          ), // Select Time
+          ListTile(
+            title: task.estTime.isEmpty
+                ? Text(
+              "Select Estimated Time",
+              style: titleStyle,
+            )
+                : Text(task.estTime),
+            subtitle: Text("Estimated Time to Complete"),
+            trailing: Icon(Icons.timelapse),
+            onTap: () async {
+              var pickedEstTime = await utility.selectEstTime(context, task.estTimeHour, task.estTimeMinute);
+              if (pickedEstTime != null && pickedEstTime.isNotEmpty)
+                setState(() {
+                  formattedEstTime = pickedEstTime["estTime"];
+                  task.estTime = pickedEstTime["estTime"];
+                  task.estTimeHour = int.parse(pickedEstTime["estTimeHour"]);
+                  task.estTimeMinute = int.parse(pickedEstTime["estTimeMinute"]);
+                });
+            },
+          ), // Select Estimated Time
           Padding(
             padding: EdgeInsets.all(_minPadding),
             child: RaisedButton(
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50.0)),
+                  borderRadius: BorderRadius.circular(10.0)),
               padding: EdgeInsets.all(_minPadding / 2),
               color: Theme.of(context).primaryColor,
               textColor: Colors.white,
-              elevation: 5.0,
+              elevation: 3.0,
               child: Text(
                 "Save",
                 style: buttonStyle,
@@ -166,19 +181,18 @@ class task_state extends State<new_task> {
                   _save();
                 });
               },
-            ), //RaisedButton
-          ), //Padding
-
+            ),
+          ), // Save Button
           Padding(
             padding: EdgeInsets.all(_minPadding),
             child: _isEditable()
                 ? RaisedButton(
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50.0)),
+                        borderRadius: BorderRadius.circular(10.0)),
                     padding: EdgeInsets.all(_minPadding / 2),
-                    color: Theme.of(context).primaryColor,
-                    textColor: Colors.white,
-                    elevation: 5.0,
+                    color: Colors.grey,
+                    textColor: Colors.black,
+                    elevation: 3.0,
                     child: Text(
                       "Delete",
                       style: buttonStyle,
@@ -190,13 +204,11 @@ class task_state extends State<new_task> {
                         _delete();
                       });
                     },
-                  ) //RaisedButton
+                  )
                 : Container(),
-          ) //Padding
-        ]) //ListView
-
-        ); //Scaffold
-  } //build()
+          ) // Delete Button
+        ]));
+  }
 
   void markedDone() {}
 
@@ -212,17 +224,20 @@ class task_state extends State<new_task> {
     task.task = taskController.text;
   }
 
-  //InputConstraints
+  // InputConstraints
   bool _checkNotNull() {
     bool res;
     if (taskController.text.isEmpty) {
-      utility.showSnackBar(scaffoldkey, 'Task cannot be empty');
+      utility.showSnackBar(scaffoldKey, 'Please input a Task title');
       res = false;
     } else if (task.date.isEmpty) {
-      utility.showSnackBar(scaffoldkey, 'Please select the Date');
+      utility.showSnackBar(scaffoldKey, 'Please select a Date');
       res = false;
     } else if (task.time.isEmpty) {
-      utility.showSnackBar(scaffoldkey, 'Please select the Time');
+      utility.showSnackBar(scaffoldKey, 'Please select a Time');
+      res = false;
+    } else if (task.estTime.isEmpty) {
+      utility.showSnackBar(scaffoldKey, 'Please input an estimated time');
       res = false;
     } else {
       res = true;
@@ -230,26 +245,22 @@ class task_state extends State<new_task> {
     return res;
   }
 
-  //Save data
+  // Save data
   void _save() async {
     int result;
-    if(_isEditable()) {
-      if (marked) {
-        task.status = "Task Completed";
-      }
-      else
-        task.status = "";
+    task.status = "ETC: ${task.estTime}"; // TODO - maybe put in % completed?
+    if (_isEditable() && marked) {
+      task.status = Strings.taskCompleted;
     }
     //task.task = taskController.text;
     //task.date = formattedDate;
 
-
     if (_checkNotNull() == true) {
       if (task.id != null) {
-        //Update Operation
+        // Update Operation
         result = await helper.updateTask(task);
       } else {
-        //Insert Operation
+        // Insert Operation
         result = await helper.insertTask(task);
       }
 
@@ -263,10 +274,9 @@ class task_state extends State<new_task> {
         utility.showAlertDialog(context, 'Status', 'Problem saving task.');
       }
     }
-  } //_save()
+  }
 
   void _delete() {
-    int result;
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -280,7 +290,7 @@ class task_state extends State<new_task> {
                   Navigator.pop(context);
                   Navigator.pop(context);
                   utility.showSnackBar(
-                      scaffoldkey, 'Task Deleted Successfully.');
+                      scaffoldKey, 'Task Deleted Successfully.');
                 },
                 child: Text("Yes"),
               ),
@@ -288,10 +298,12 @@ class task_state extends State<new_task> {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text("No"),
+                child: Text("No",
+                  style: TextStyle(color: Theme.of(context).primaryColor),
+                ),
               )
             ],
           );
         });
   }
-} //class task_state
+}
