@@ -5,7 +5,7 @@ import 'package:flutter_tasks/models/task.dart';
 import 'package:flutter_tasks/utilities/database_helper.dart';
 import 'package:flutter_tasks/utilities/strings.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:flutter_tasks/widgets/custom_widget.dart';
+import 'package:flutter_tasks/widgets/task_list_widget.dart';
 import 'package:flutter_tasks/utilities/utils.dart';
 
 class TodoWidget extends StatefulWidget {
@@ -18,9 +18,10 @@ class TodoWidget extends StatefulWidget {
 class TodoState extends State<TodoWidget> {
   DatabaseHelper databaseHelper = DatabaseHelper.instance;
   Utils utility = new Utils();
+  final homeScaffold = GlobalKey<ScaffoldState>();
+
   List<Task> taskList;
   int count = 0;
-  final homeScaffold = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +59,7 @@ class TodoState extends State<TodoWidget> {
                       future: databaseHelper.getInCompleteTaskList(),
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
                         if (snapshot.data == null) {
-                          return Text("Loading");
+                          return Text("Loading . . . ");
                         } else {
                           if (snapshot.data.length < 1) {
                             return Center(
@@ -81,7 +82,7 @@ class TodoState extends State<TodoWidget> {
                                     child: Card(
                                       margin: EdgeInsets.all(1.0),
                                       elevation: 2.0,
-                                      child: CustomWidget(
+                                      child: TaskListWidget(
                                         title: snapshot.data[position].task,
                                         sub1: snapshot.data[position].date,
                                         sub2: snapshot.data[position].time,
@@ -118,7 +119,7 @@ class TodoState extends State<TodoWidget> {
                       future: databaseHelper.getCompleteTaskList(),
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
                         if (snapshot.data == null) {
-                          return Text("Loading");
+                          return Text("Loading . . .");
                         } else {
                           if (snapshot.data.length < 1) {
                             return Center(
@@ -143,7 +144,7 @@ class TodoState extends State<TodoWidget> {
                                     child: Card(
                                       margin: EdgeInsets.all(1.0),
                                       elevation: 2.0,
-                                      child: CustomWidget(
+                                      child: TaskListWidget(
                                           title: snapshot.data[position].task,
                                           sub1: snapshot.data[position].date,
                                           sub2: snapshot.data[position].time,
@@ -174,10 +175,10 @@ class TodoState extends State<TodoWidget> {
             ),
           ]),
           floatingActionButton: FloatingActionButton(
-              tooltip: "Add Task",
+              tooltip: Strings.addTask,
               child: Icon(Icons.add),
               onPressed: () {
-                navigateToTask(Task('', '', '', '', 1, 0, ''), "Add Task", this); // TODO: Settings -> default est task time
+                navigateToTask(Task('', '', '', '', 1, 0, ''), Strings.addTask, this); // TODO: Settings -> default est task time
               }),
         ));
   }

@@ -605,6 +605,7 @@ class _TimePickerDialogState extends State<_TimePickerDialog> {
 
     picker = Form(
       key: _formKey,
+      // ignore: deprecated_member_use
       autovalidate: _autoValidate,
       child: SingleChildScrollView(
         child: Column(

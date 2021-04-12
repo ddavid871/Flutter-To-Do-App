@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class CustomWidget extends StatelessWidget {
-  CustomWidget({
+class TaskListWidget extends StatelessWidget {
+  TaskListWidget({
     Key key,
     this.title,
     this.sub1,

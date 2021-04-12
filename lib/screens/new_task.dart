@@ -3,9 +3,12 @@ import 'package:flutter_tasks/utilities/database_helper.dart';
 import 'package:flutter_tasks/utilities/strings.dart';
 import 'package:flutter_tasks/utilities/utils.dart';
 import 'package:flutter_tasks/models/task.dart';
-import 'package:flutter_tasks/screens/todo_list.dart';
+import 'package:flutter_tasks/widgets/todo_widget.dart';
 
 var globalDate = "Pick Date";
+
+// TODO - https://api.flutter.dev/flutter/material/DropdownButton-class.html
+// ^ For adding to task region
 
 // ignore: must_be_immutable
 class NewTask extends StatefulWidget {
@@ -213,7 +216,7 @@ class TaskState extends State<NewTask> {
   void markedDone() {}
 
   bool _isEditable() {
-    if (this.appBarTitle == "Add Task")
+    if (this.appBarTitle == Strings.addTask)
       return false;
     else {
       return true;
@@ -228,16 +231,16 @@ class TaskState extends State<NewTask> {
   bool _checkNotNull() {
     bool res;
     if (taskController.text.isEmpty) {
-      utility.showSnackBar(scaffoldKey, 'Please input a Task title');
+      utility.showSnackBar(scaffoldKey, 'Please input a Task title.');
       res = false;
     } else if (task.date.isEmpty) {
-      utility.showSnackBar(scaffoldKey, 'Please select a Date');
+      utility.showSnackBar(scaffoldKey, 'Please select a Date.');
       res = false;
     } else if (task.time.isEmpty) {
-      utility.showSnackBar(scaffoldKey, 'Please select a Time');
+      utility.showSnackBar(scaffoldKey, 'Please select a Time.');
       res = false;
     } else if (task.estTime.isEmpty) {
-      utility.showSnackBar(scaffoldKey, 'Please input an estimated time');
+      utility.showSnackBar(scaffoldKey, 'Please input an Estimated Time.');
       res = false;
     } else {
       res = true;
