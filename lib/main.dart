@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_tasks/screens/todo_list.dart';
+import 'package:flutter_tasks/widgets/region_widget.dart';
+import 'package:flutter_tasks/widgets/todo_widget.dart';
 
 import 'package:flutter_tasks/widgets/calendar_widget.dart';
 
@@ -43,6 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
   final List<Widget> _children = [
     TodoWidget(),
+    RegionWidget(),
     CalendarWidget(),
   ];
 
@@ -68,6 +70,10 @@ class _MyHomePageState extends State<MyHomePage> {
             new BottomNavigationBarItem(
               icon: new Icon(Icons.list),
               label: 'Tasks',
+            ),
+            new BottomNavigationBarItem(
+              icon: Icon(Icons.auto_awesome_mosaic),
+              label: 'Task Regions',
             ),
             new BottomNavigationBarItem(
               icon: Icon(Icons.calendar_today_outlined),

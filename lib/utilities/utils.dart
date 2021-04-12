@@ -6,6 +6,8 @@ import 'package:intl/intl.dart';
 class Utils {
   static Utils _utils;
 
+  String dateFormatStr = "EEEE, MMM d y";
+
   Utils._createInstance();
 
   factory Utils() {
@@ -27,7 +29,7 @@ class Utils {
   void showSnackBar(var scaffoldKey, String message) {
     final snackBar = SnackBar(
       content: Text(message),
-      duration: Duration(seconds: 1, milliseconds: 500),
+      duration: Duration(seconds: 1, milliseconds: 1000),
     );
     scaffoldKey.currentState.showSnackBar(snackBar);
   }
@@ -38,7 +40,7 @@ class Utils {
         firstDate: DateTime.now(),
         initialDate: date.isEmpty
             ? DateTime.now()
-            : new DateFormat("d MMM, y").parse(date),
+            : getDateTime(date),
         lastDate: DateTime.now().add(Duration(days: 356)));
     if (picked != null) return formatDate(picked);
 
@@ -46,23 +48,11 @@ class Utils {
   }
 
   Future<String> selectTime(BuildContext context, String taskTime) async {
-    int taskTimeHour, taskTimeMinutes;
-    var taskPeriod;
-    if (taskTime.isNotEmpty) {
-      var taskTimePieces = taskTime.split(RegExp(":| "));
-      taskTimeHour = int.parse(taskTimePieces[0]);
-      taskTimeMinutes = int.parse(taskTimePieces[1]);
-      taskPeriod = taskTimePieces[2];
-      if (taskPeriod == "PM") {
-        taskTimeHour = taskTimeHour + 12;
-      }
-    }
-
     final TimeOfDay picked = await showTimePicker(
       context: context,
       initialTime: taskTime.isEmpty
         ? TimeOfDay(hour: 12, minute: 0)
-        : new TimeOfDay(hour: taskTimeHour, minute: taskTimeMinutes),
+        : getTimeOfDay(taskTime),
       builder: (BuildContext context, Widget child) {
         return MediaQuery(
           data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
@@ -115,6 +105,31 @@ class Utils {
     return estTimePieces;
   }
 
+  DateTime getDateTime(String date) =>
+      new DateFormat("$dateFormatStr").parse(date);
+
+  String formatDate(DateTime selectedDate) =>
+      new DateFormat("$dateFormatStr").format(selectedDate);
+
+  TimeOfDay getTimeOfDay(String taskTime) {
+    int taskTimeHour, taskTimeMinutes;
+    var taskPeriod;
+    if (taskTime.isNotEmpty) {
+      var taskTimePieces = taskTime.split(RegExp(":| "));
+      taskTimeHour = int.parse(taskTimePieces[0]);
+      taskTimeMinutes = int.parse(taskTimePieces[1]);
+      taskPeriod = taskTimePieces[2];
+      if ((taskPeriod == "AM") && (taskTimeHour == 12)) {
+        taskTimeHour = 0; // Midnight
+      }
+      else if ((taskPeriod == "PM") && (taskTimeHour != 12)) {
+        taskTimeHour = taskTimeHour + 12;
+      }
+    }
+
+    return new TimeOfDay(hour: taskTimeHour, minute: taskTimeMinutes);
+  }
+
   String timeFormat(TimeOfDay picked) {
     var hour = 00;
     var time = "PM";
@@ -150,9 +165,6 @@ class Utils {
 
     return h + ":" + m + " " + time;
   }
-
-  String formatDate(DateTime selectedDate) =>
-      new DateFormat("d MMM, y").format(selectedDate);
 
   String estTimeFormat(TimeInput picked) {
     var hourValue = "${picked.hour} hour";
