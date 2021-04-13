@@ -1,8 +1,11 @@
 // This widget uses Sfcalendar
 // Source: https://pub.dev/packages/syncfusion_flutter_calendar
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tasks/models/calendar_settings.dart';
 import 'package:flutter_tasks/models/task_region.dart';
+import 'package:flutter_tasks/screens/calendar_settings.dart';
 import 'package:flutter_tasks/utilities/database_helper.dart';
 import 'package:flutter_tasks/utilities/utils.dart';
 import 'package:sqflite/sqflite.dart';
@@ -24,12 +27,17 @@ class CalendarBoardState extends State<CalendarWidget> {
   List<TimeRegion> specialRegionsList;
   int count = 0;
 
+  CalendarSettings calendarSettings; // TODO
+
   @override
   Widget build(BuildContext context) {
-    // fixme - do same for other lists?
+    // TODO - do same for other lists
     if (specialRegionsList == null) {
       specialRegionsList = List<TimeRegion>();
       updateCalendarView();
+    }
+    if (calendarSettings == null) {
+      calendarSettings = new CalendarSettings(0, 1);
     }
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -39,10 +47,21 @@ class CalendarBoardState extends State<CalendarWidget> {
             'Calendar',
             style: TextStyle(fontSize: 25),
           ),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.settings),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CalendarSettingsScreen(calendarSettings)),
+                );
+              },
+            ),
+          ],
         ),
         body: Container(
           child: SfCalendar(
-            view: CalendarView.week,
+            view: CalendarView.week, // TODO - Add setting to select default view
             showDatePickerButton: true,
             allowViewNavigation: true,
             allowedViews: <CalendarView>[
@@ -58,7 +77,7 @@ class CalendarBoardState extends State<CalendarWidget> {
               borderRadius: const BorderRadius.all(Radius.circular(4)),
               shape: BoxShape.rectangle,
             ),
-            firstDayOfWeek: 1, // TODO - Add setting to select Monday vs. Sunday
+            firstDayOfWeek: calendarSettings.weekFirstDay,
             cellBorderColor: Colors.black38,
             specialRegions: specialRegionsList,
             dataSource: MeetingDataSource(_getDataSource()),
@@ -96,25 +115,14 @@ class CalendarBoardState extends State<CalendarWidget> {
       regions.add(TimeRegion(
         startTime: DateTime(startDate.year, startDate.month, startDate.day, timeStart.hour, timeStart.minute),
         endTime: DateTime(startDate.year, startDate.month, startDate.day, timeEnd.hour, timeEnd.minute),
-        // fixme - update values below
-        recurrenceRule: null,
+        recurrenceRule: taskRegion.regionRRule,
         textStyle: TextStyle(color: Colors.black, fontSize: 10),
-        color: Color(0xffbD3D3D3),
+        color: Color(0xffbD3D3D3), // fixme - Add color picker
         text: '${taskRegion.taskRegion}',
       ));
     }
 
     return regions;
-
-    /* EXAMPLE
-    regions.add(TimeRegion(
-        startTime: DateTime(2021, 4, 5, 0),
-        endTime: DateTime(2021, 4, 5, 8),
-        recurrenceRule: 'FREQ=DAILY;INTERVAL=1;BYDAY=SAT,SUN',
-        textStyle: TextStyle(color: Colors.black, fontSize: 10),
-        color: Color(0xffbD3D3D3),
-        text: 'Reserved'));
-    */
   }
 
   /* EXAMPLES
@@ -160,6 +168,7 @@ class CalendarBoardState extends State<CalendarWidget> {
         recurrenceRule: 'FREQ=DAILY')
     );
     */
+    // TODO - get Task due dates and put on calendar as all-day events?
 
     eventList.add(Meeting(
         eventName: 'Capstone',
@@ -168,7 +177,7 @@ class CalendarBoardState extends State<CalendarWidget> {
         background: Colors.green,
         isAllDay: false,
         recurrenceRule:
-            'FREQ=DAILY;BYDAY=SA,SU;INTERVAL=1;UNTIL=20210414T060000Z'));
+            'FREQ=DAILY;BYDAY=SA,SU;INTERVAL=1;UNTIL=20210423T060000Z'));
 
     eventList.add(Meeting(
         eventName: 'Work',
@@ -177,7 +186,7 @@ class CalendarBoardState extends State<CalendarWidget> {
         background: Colors.blue,
         isAllDay: false,
         recurrenceRule:
-            'FREQ=WEEKLY;BYDAY=TU,TH;INTERVAL=1;UNTIL=20210414T060000Z'));
+            'FREQ=WEEKLY;BYDAY=TU,TH;INTERVAL=1;UNTIL=20210423T060000Z'));
 
     return eventList;
   }

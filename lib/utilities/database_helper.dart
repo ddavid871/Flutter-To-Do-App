@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter_tasks/models/calendar_settings.dart';
 import 'package:flutter_tasks/models/task_region.dart';
 import 'package:flutter_tasks/utilities/strings.dart';
 import 'package:path/path.dart';
@@ -13,6 +14,7 @@ class DatabaseHelper {
 
   static final taskTable = "task_table";
   static final taskRegionTable = "task_region_table";
+  static final calSettingsTable = "calendar_settings_table";
 
   static final colId = "id";
 
@@ -30,8 +32,13 @@ class DatabaseHelper {
   static final colRegionStartDate = "regionStartDate";
   static final colRegionStartTime = "regionStartTime";
   static final colRegionEndTime = "regionEndTime";
+  static final colRegionRRuleOption = "regionRRuleOption";
   static final colRegionRRule = "regionRRule"; // Recurrence rule
   static final colRegionColor = "regionColor";
+
+  // For Calendar Settings
+  static final colCalDefaultView = "calDefaultView";
+  static final colCalWeekFirstDay = "calWeekFirstDay";
 
   DatabaseHelper._privateConstructor();
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
@@ -82,10 +89,47 @@ class DatabaseHelper {
             $colRegionStartDate TEXT,
             $colRegionStartTime TEXT,
             $colRegionEndTime TEXT,
+            $colRegionRRuleOption TEXT,
             $colRegionRRule TEXT,
             $colRegionColor TEXT
           )
           ''');
+    await db.execute('''
+          CREATE TABLE $calSettingsTable (
+            $colId INTEGER PRIMARY KEY AUTOINCREMENT,
+            $colCalDefaultView INTEGER,
+            $colCalWeekFirstDay INTEGER
+          )
+          ''');
+  }
+
+  // ========== For Calendar Settings ==========
+  // Fetch Operation: Get all Calendar Settings objects from database
+  Future<List<Map<String, dynamic>>> getCalendarSettingsMapList() async {
+    Database db = await instance.database;
+    //var result = await db.query(taskTable, orderBy: "$colId DESC");
+    var result = db.query(calSettingsTable);
+    return result;
+  }
+
+  // Insert Operation: Insert a Calendar Settings object to database
+  Future<int> insertCalendarSetting(CalendarSettings calendarSettings) async {
+    Database db = await instance.database;
+    var result = await db.insert(calSettingsTable, calendarSettings.toMap());
+    return result;
+  }
+
+  // Update Operation: Update a Calendar Settings object and save it to database
+  Future<int> updateCalendarSetting(CalendarSettings calendarSettings) async {
+    var db = await instance.database;
+    var result = await db.update(calSettingsTable, calendarSettings.toMap(), where: '$colId = ?', whereArgs: [calendarSettings.id] );
+    return result;
+  }
+
+  // Delete Operation: Delete a Calendar Settings from database
+  Future<int> deleteCalendarSettings(int id) async {
+    Database db = await instance.database;
+    return await db.delete(calSettingsTable, where: '$colId = ?', whereArgs: [id]);
   }
 
   // ========== For Task Regions ==========
