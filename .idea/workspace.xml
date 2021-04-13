@@ -20,21 +20,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f60b6778-2f4f-4268-b715-dc6b513db885" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/lib/models/task_region.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/screens/new_task_region.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/widgets/region_list_widget.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/widgets/region_widget.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/models/calendar_settings.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/screens/calendar_settings.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/models/task_region.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/models/task_region.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/screens/new_task.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/new_task.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/screens/todo_list.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/widgets/todo_widget.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/screens/new_task_region.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/new_task_region.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/utilities/database_helper.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/utilities/database_helper.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/utilities/est_time_picker.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/utilities/est_time_picker.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/utilities/strings.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/utilities/strings.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/utilities/utils.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/utilities/utils.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/widgets/calendar_widget.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/widgets/calendar_widget.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/widgets/custom_widget.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/widgets/task_list_widget.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/widgets/tasks_widget.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/widgets/region_list_widget.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/widgets/region_list_widget.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/widgets/region_widget.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/widgets/region_widget.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -121,7 +119,21 @@
       <option name="project" value="LOCAL" />
       <updated>1618112299263</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Add basic task regions">
+      <created>1618211569045</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1618211569045</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Misc cleanup">
+      <created>1618211609301</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1618211609301</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -139,7 +151,9 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Init push" />
     <MESSAGE value="Organize files and clean up commments" />
-    <option name="LAST_COMMIT_MESSAGE" value="Organize files and clean up commments" />
+    <MESSAGE value="Add basic task regions" />
+    <MESSAGE value="Misc cleanup" />
+    <option name="LAST_COMMIT_MESSAGE" value="Misc cleanup" />
   </component>
   <component name="WindowStateProjectService">
     <state x="127" y="178" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1618119087584">
@@ -166,22 +180,22 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1281" height="927" key="GridCell.Tab.-1.right/0.0.1920.1040/1920.42.1280.984@0.0.1920.1040" timestamp="1618206247382" />
-    <state width="1398" height="217" key="GridCell.Tab.0.bottom" timestamp="1618211371183">
+    <state width="1395" height="309" key="GridCell.Tab.0.bottom" timestamp="1618278671186">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1398" height="217" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.42.1280.984@0.0.1920.1040" timestamp="1618211371183" />
-    <state width="1398" height="217" key="GridCell.Tab.0.center" timestamp="1618211371183">
+    <state width="1395" height="309" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.42.1280.984@0.0.1920.1040" timestamp="1618278671186" />
+    <state width="1395" height="309" key="GridCell.Tab.0.center" timestamp="1618278671186">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1398" height="217" key="GridCell.Tab.0.center/0.0.1920.1040/1920.42.1280.984@0.0.1920.1040" timestamp="1618211371183" />
-    <state width="1398" height="217" key="GridCell.Tab.0.left" timestamp="1618211371183">
+    <state width="1395" height="309" key="GridCell.Tab.0.center/0.0.1920.1040/1920.42.1280.984@0.0.1920.1040" timestamp="1618278671186" />
+    <state width="1395" height="309" key="GridCell.Tab.0.left" timestamp="1618278671186">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1398" height="217" key="GridCell.Tab.0.left/0.0.1920.1040/1920.42.1280.984@0.0.1920.1040" timestamp="1618211371183" />
-    <state width="1398" height="217" key="GridCell.Tab.0.right" timestamp="1618211371183">
+    <state width="1395" height="309" key="GridCell.Tab.0.left/0.0.1920.1040/1920.42.1280.984@0.0.1920.1040" timestamp="1618278671186" />
+    <state width="1395" height="309" key="GridCell.Tab.0.right" timestamp="1618278671186">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1398" height="217" key="GridCell.Tab.0.right/0.0.1920.1040/1920.42.1280.984@0.0.1920.1040" timestamp="1618211371183" />
+    <state width="1395" height="309" key="GridCell.Tab.0.right/0.0.1920.1040/1920.42.1280.984@0.0.1920.1040" timestamp="1618278671186" />
     <state width="1398" height="238" key="GridCell.Tab.1.bottom" timestamp="1618206237834">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -226,25 +240,25 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="567" y="439" key="VCS.ChangelistChooser/0.0.1920.1040/1920.42.1280.984@0.0.1920.1040" timestamp="1618111866791" />
-    <state x="312" y="257" key="Vcs.Push.Dialog.v2" timestamp="1618112300426">
+    <state x="312" y="257" key="Vcs.Push.Dialog.v2" timestamp="1618211610816">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="312" y="257" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.42.1280.984@0.0.1920.1040" timestamp="1618112300426" />
+    <state x="312" y="257" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.42.1280.984@0.0.1920.1040" timestamp="1618211610816" />
     <state x="769" y="434" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1618112475358">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="769" y="434" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040/1920.42.1280.984@0.0.1920.1040" timestamp="1618112475358" />
-    <state x="1920" y="170" width="1178" height="695" maximized="true" key="dock-window-1" timestamp="1618200406631">
+    <state x="1920" y="170" width="1178" height="695" maximized="true" key="dock-window-1" timestamp="1618276441479">
       <screen x="1920" y="42" width="1280" height="984" />
     </state>
-    <state x="1920" y="170" width="1178" height="695" maximized="true" key="dock-window-1/0.0.1920.1040/1920.42.1280.984@0.0.1920.1040" timestamp="1618200406631" />
-    <state x="372" y="245" key="run.anything.popup" timestamp="1618115932467">
+    <state x="1920" y="170" width="1178" height="695" maximized="true" key="dock-window-1/0.0.1920.1040/1920.42.1280.984@0.0.1920.1040" timestamp="1618276441479" />
+    <state x="372" y="245" key="run.anything.popup" timestamp="1618275504005">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="372" y="245" key="run.anything.popup/0.0.1920.1040/1920.42.1280.984@0.0.1920.1040" timestamp="1618115932467" />
-    <state x="383" y="231" width="672" height="678" key="search.everywhere.popup" timestamp="1618209308039">
+    <state x="372" y="245" key="run.anything.popup/0.0.1920.1040/1920.42.1280.984@0.0.1920.1040" timestamp="1618275504005" />
+    <state x="383" y="231" width="672" height="678" key="search.everywhere.popup" timestamp="1618252056791">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="383" y="231" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040/1920.42.1280.984@0.0.1920.1040" timestamp="1618209308039" />
+    <state x="383" y="231" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040/1920.42.1280.984@0.0.1920.1040" timestamp="1618252056791" />
   </component>
 </project>

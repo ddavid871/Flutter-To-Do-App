@@ -75,11 +75,10 @@ class RegionState extends State<RegionWidget> {
                                     elevation: 2.0,
                                     child: RegionListWidget(
                                       title: snapshot.data[position].taskRegion,
-                                      // Fixme - edit sub1 with recurrence
-                                      sub1: snapshot
-                                          .data[position].regionStartDate,
+                                      sub1: snapshot.data[position].regionRRuleOption,
                                       sub2:
                                           "${snapshot.data[position].regionStartTime}–${snapshot.data[position].regionEndTime}",
+                                      // FIXME - add widget to display color
                                       trailing: Icon(
                                         Icons.edit,
                                         color: Theme.of(context).primaryColor,
@@ -100,7 +99,7 @@ class RegionState extends State<RegionWidget> {
               child: Icon(Icons.add),
               onPressed: () {
                 navigateToTaskRegion(
-                    TaskRegion('', '', '', ''), Strings.addTaskRegion, this);
+                    TaskRegion('', '', '', '', '', ''), Strings.addTaskRegion, this);
               }),
         ));
   }

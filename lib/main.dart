@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tasks/screens/calendar_settings.dart';
 import 'package:flutter_tasks/widgets/region_widget.dart';
 import 'package:flutter_tasks/widgets/todo_widget.dart';
 
@@ -19,11 +20,6 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: MyHomePage(title: 'Tasks'),
-      /*
-      routes: {
-        SettingsScreen.routeName: (ctx) => SettingsScreen(), // setting up routes
-      },
-      */
     );
   }
 }
@@ -51,17 +47,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      /*
-      appBar: AppBar(
-        title: Text(widget.title),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.settings),
-            onPressed: null,//() => Navigator.of(context).pushNamed(SettingsScreen.routeName),
-          ),
-        ],
-      ),
-      */
       body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         onTap: onTabTapped,

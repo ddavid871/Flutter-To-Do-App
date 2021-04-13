@@ -34,6 +34,7 @@ class TaskRegionState extends State<NewTaskRegion> {
   TextStyle titleStyle = new TextStyle(
     fontSize: 18,
     fontFamily: "Lato",
+    color: Colors.black,
   );
 
   TextStyle buttonStyle =
@@ -48,8 +49,8 @@ class TaskRegionState extends State<NewTaskRegion> {
   var regionStartDate = "Pick Date";
   var regionStartTime = "Pick Start Time";
   var regionEndTime = "Pick End Time";
-  var repeatRule = "";
-  var regionColor = "";
+  var repeatRRule = Strings.rruleNoRepeat;
+  var regionColor = ""; // fixme
   var _minPadding = 10.0;
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay(minute: null, hour: null);
@@ -153,6 +154,37 @@ class TaskRegionState extends State<NewTaskRegion> {
           ),
         ]),
         // Task Region Start/End Time
+        ListTile(
+          title: DropdownButton<String>(
+            value: taskRegion.regionRRuleOption.isEmpty
+                ? this.repeatRRule
+                : taskRegion.regionRRuleOption,
+            style: titleStyle,
+            underline: Container(),
+            onChanged: (String newValue) {
+              setState(() {
+                this.repeatRRule = newValue;
+                taskRegion.regionRRuleOption = repeatRRule;
+                taskRegion.regionRRule = _getRegionRRule(repeatRRule);
+              });
+            },
+            items: <String>[
+              Strings.rruleNoRepeat,
+              Strings.rruleDaily,
+              Strings.rruleWeekly,
+              Strings.rruleWeekDay,
+              Strings.rruleCustom
+            ].map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(
+                    value,
+                    style: titleStyle),
+              );
+            }).toList(),
+          ),
+          trailing: Icon(Icons.repeat),
+        ), // Recurrence
         Padding(
           padding: EdgeInsets.all(_minPadding),
           child: RaisedButton(
@@ -210,6 +242,24 @@ class TaskRegionState extends State<NewTaskRegion> {
       return false;
     else {
       return true;
+    }
+  }
+
+  // https://www.textmagic.com/free-tools/rrule-generator
+  String _getRegionRRule(String repeatRRule) {
+    switch (repeatRRule) {
+      case Strings.rruleDaily:
+        return 'FREQ=DAILY;INTERVAL=1;';
+      case Strings.rruleWeekly:
+        return 'FREQ=WEEKLY;INTERVAL=1'; // fixme - depends on day
+        break;
+      case Strings.rruleWeekDay:
+        return 'FREQ=DAILY;INTERVAL=1;BYDAY=SAT,SUN';
+      case Strings.rruleCustom: // fixme
+      case Strings.rruleNoRepeat:
+      default:
+        return '';
+        break;
     }
   }
 
@@ -287,6 +337,7 @@ class TaskRegionState extends State<NewTaskRegion> {
     }
   }
 
+  // Delete data
   void _delete() {
     showDialog(
         context: context,

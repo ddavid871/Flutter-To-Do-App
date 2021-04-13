@@ -1,11 +1,12 @@
 
-// fixme - WIP
 class TaskRegion {
   int _id;
   String _taskRegion;
   String _regionStartDate;
   String _regionStartTime;
   String _regionEndTime;
+  String _regionRRuleOption;
+  String _regionRRule;
 
   /* EXAMPLE
   TimeRegion(
@@ -17,14 +18,16 @@ class TaskRegion {
         text: 'Reserved'));
  */
 
-  TaskRegion(this._taskRegion, this._regionStartDate, this._regionStartTime, this._regionEndTime);
-  TaskRegion.withId(this._id, this._taskRegion, this._regionStartDate, this._regionStartTime, this._regionEndTime);
+  TaskRegion(this._taskRegion, this._regionStartDate, this._regionStartTime, this._regionEndTime, this._regionRRuleOption, this._regionRRule);
+  TaskRegion.withId(this._id, this._taskRegion, this._regionStartDate, this._regionStartTime, this._regionEndTime, this._regionRRuleOption, this._regionRRule);
 
   int get id => _id;
   String get taskRegion => _taskRegion;
   String get regionStartDate => _regionStartDate;
   String get regionStartTime => _regionStartTime;
   String get regionEndTime => _regionEndTime;
+  String get regionRRuleOption => _regionRRuleOption;
+  String get regionRRule => _regionRRule;
 
   set taskRegion(String newTaskRegion) {
     if (newTaskRegion.length <= 255) {
@@ -34,6 +37,8 @@ class TaskRegion {
   set regionStartDate(String newRegionStartDate) => this._regionStartDate = newRegionStartDate;
   set regionStartTime(String newRegionStartTime) => this._regionStartTime = newRegionStartTime;
   set regionEndTime(String newRegionEndTime) => this._regionEndTime = newRegionEndTime;
+  set regionRRuleOption(String newRegionRRuleOption) => this._regionRRuleOption = newRegionRRuleOption;
+  set regionRRule(String newRegionRRule) => this._regionRRule = newRegionRRule;
 
   // Convert Task Region object into Map object
   Map<String, dynamic> toMap() {
@@ -43,15 +48,19 @@ class TaskRegion {
     map['regionStartDate'] = _regionStartDate;
     map['regionStartTime'] = _regionStartTime;
     map['regionEndTime'] = _regionEndTime;
+    map['regionRRuleOption'] = _regionRRuleOption;
+    map['regionRRule'] = _regionRRule;
     return map;
   }
 
-  // Extract Task object from Map object
+  // Extract Task Region object from Map object
   TaskRegion.fromMapObject(Map<String, dynamic> map) {
     this._id = map['id'];
     this._taskRegion = map['taskRegion'];
     this._regionStartDate = map['regionStartDate'];
     this._regionStartTime = map['regionStartTime'];
     this._regionEndTime = map['regionEndTime'];
+    this._regionRRuleOption = map['regionRRuleOption'];
+    this._regionRRule = map['regionRRule'];
   }
 }

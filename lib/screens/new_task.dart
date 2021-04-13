@@ -93,9 +93,10 @@ class TaskState extends State<NewTask> {
             ),
           ), // Task Title
           Padding(
-              padding: EdgeInsets.only(left: 50.0, right: 50.0),
+              padding: EdgeInsets.only(left: 0),
               child: _isEditable()
                   ? CheckboxListTile(
+                      controlAffinity: ListTileControlAffinity.leading,
                       title: Text("Mark as Done", style: titleStyle),
                       value: (task.status == Strings.taskCompleted) ? true : marked,
                       onChanged: (bool value) {

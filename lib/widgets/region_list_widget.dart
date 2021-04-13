@@ -50,6 +50,7 @@ class RegionListWidget extends StatelessWidget {
               ],
             ),
           ),
+          // FIXME - add widget to display color
           trailing,
         ]));
   }
