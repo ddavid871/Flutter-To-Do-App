@@ -78,7 +78,14 @@ class RegionState extends State<RegionWidget> {
                                       sub1: snapshot.data[position].regionRRuleOption,
                                       sub2:
                                           "${snapshot.data[position].regionStartTime}–${snapshot.data[position].regionEndTime}",
-                                      // FIXME - add widget to display color
+                                      color: Padding(
+                                        padding: EdgeInsets.only(right: 5),
+                                        child: Container(
+                                          height: 10.0,
+                                          width: 10.0,
+                                          color: utility.getColor(snapshot.data[position].regionColor),
+                                        ),
+                                      ),
                                       trailing: Icon(
                                         Icons.edit,
                                         color: Theme.of(context).primaryColor,
@@ -99,7 +106,7 @@ class RegionState extends State<RegionWidget> {
               child: Icon(Icons.add),
               onPressed: () {
                 navigateToTaskRegion(
-                    TaskRegion('', '', '', '', '', ''), Strings.addTaskRegion, this);
+                    TaskRegion('', '', '', '', '', '', ''), Strings.addTaskRegion, this);
               }),
         ));
   }

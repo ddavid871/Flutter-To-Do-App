@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tasks/screens/new_task.dart';
 import 'dart:async';
@@ -94,6 +95,15 @@ class TodoState extends State<TodoWidget> {
                                                     onPressed: null,
                                                   )
                                                 : Container(),
+                                        color: (snapshot.data[position].taskRegionColor.isEmpty) ? Container() :
+                                        Padding(
+                                          padding: EdgeInsets.only(right: 5),
+                                          child: Container(
+                                            height: 10.0,
+                                            width: 10.0,
+                                            color: utility.getColor(snapshot.data[position].taskRegionColor),
+                                          ),
+                                        ),
                                         trailing: Icon(
                                           Icons.edit,
                                           color: Theme.of(context).primaryColor,
@@ -162,6 +172,7 @@ class TodoState extends State<TodoWidget> {
                                                   },
                                                 )
                                               : Container(),
+                                          color: Container(), // fixme
                                           trailing: Container()
                                           ),
                                     ));
@@ -178,7 +189,7 @@ class TodoState extends State<TodoWidget> {
               tooltip: Strings.addTask,
               child: Icon(Icons.add),
               onPressed: () {
-                navigateToTask(Task('', '', '', '', 1, 0, ''), Strings.addTask, this); // TODO: Settings -> default est task time
+                navigateToTask(Task('', '', '', '', 1, 0, '', '', ''), Strings.addTask, this); // TODO: Settings -> default est task time
               }),
         ));
   }

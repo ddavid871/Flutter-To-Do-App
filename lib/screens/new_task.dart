@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tasks/models/task_region.dart';
 import 'package:flutter_tasks/utilities/database_helper.dart';
 import 'package:flutter_tasks/utilities/strings.dart';
 import 'package:flutter_tasks/utilities/utils.dart';
@@ -6,9 +7,6 @@ import 'package:flutter_tasks/models/task.dart';
 import 'package:flutter_tasks/widgets/todo_widget.dart';
 
 var globalDate = "Pick Date";
-
-// TODO - https://api.flutter.dev/flutter/material/DropdownButton-class.html
-// ^ For adding to task region
 
 // ignore: must_be_immutable
 class NewTask extends StatefulWidget {
@@ -29,6 +27,8 @@ class TaskState extends State<NewTask> {
   String appBarTitle;
   Task task;
   List<Widget> icons;
+  List<String> regions;
+  List<String> regionColors;
 
   TaskState(this.task, this.appBarTitle, this.todoState);
 
@@ -37,6 +37,7 @@ class TaskState extends State<NewTask> {
   TextStyle titleStyle = new TextStyle(
     fontSize: 18,
     fontFamily: "Lato",
+    color: Colors.black,
   );
 
   TextStyle buttonStyle =
@@ -44,16 +45,27 @@ class TaskState extends State<NewTask> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  DatabaseHelper helper = DatabaseHelper.instance;
+  DatabaseHelper databaseHelper = DatabaseHelper.instance;
   Utils utility = new Utils();
   TextEditingController taskController = new TextEditingController();
 
   var formattedDate = "Pick Date";
   var formattedTime = "Select Time";
   var formattedEstTime = "Select Estimated Time";
+  var selectedTaskRegion = Strings.noTaskRegion;
   var _minPadding = 10.0;
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay(minute: null, hour: null);
+
+  @override
+  void initState() {
+    super.initState();
+    regions = new List<String>();
+    regions.add(Strings.noTaskRegion);
+
+    regionColors = new List<String>();
+    regionColors.add("");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,17 +110,19 @@ class TaskState extends State<NewTask> {
                   ? CheckboxListTile(
                       controlAffinity: ListTileControlAffinity.leading,
                       title: Text("Mark as Done", style: titleStyle),
-                      value: (task.status == Strings.taskCompleted) ? true : marked,
+                      value: (task.status == Strings.taskCompleted)
+                          ? true
+                          : marked,
                       onChanged: (bool value) {
                         setState(() {
                           marked = value;
-                          task.status = "ETC: ${task.estTime}"; // TODO - % complete
+                          task.status =
+                              "ETC: ${task.estTime}"; // TODO - % complete
                         });
                       })
                   : Container(
                       height: 2,
-                    )
-          ), // Mark as Done
+                    )), // Mark as Done
           ListTile(
             title: task.date.isEmpty
                 ? Text(
@@ -148,23 +162,63 @@ class TaskState extends State<NewTask> {
           ListTile(
             title: task.estTime.isEmpty
                 ? Text(
-              "Select Estimated Time",
-              style: titleStyle,
-            )
+                    "Select Estimated Time",
+                    style: titleStyle,
+                  )
                 : Text(task.estTime),
             subtitle: Text("Estimated Time to Complete"),
             trailing: Icon(Icons.timelapse),
             onTap: () async {
-              var pickedEstTime = await utility.selectEstTime(context, task.estTimeHour, task.estTimeMinute);
+              var pickedEstTime = await utility.selectEstTime(
+                  context, task.estTimeHour, task.estTimeMinute);
               if (pickedEstTime != null && pickedEstTime.isNotEmpty)
                 setState(() {
                   formattedEstTime = pickedEstTime["estTime"];
                   task.estTime = pickedEstTime["estTime"];
                   task.estTimeHour = int.parse(pickedEstTime["estTimeHour"]);
-                  task.estTimeMinute = int.parse(pickedEstTime["estTimeMinute"]);
+                  task.estTimeMinute =
+                      int.parse(pickedEstTime["estTimeMinute"]);
                 });
             },
           ), // Select Estimated Time
+          FutureBuilder<List>(
+            future: _getTaskRegions(regions),
+            builder: (context, snapshot) {
+              return ListTile(
+                // https://api.flutter.dev/flutter/material/DropdownButton-class.html
+                title: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                        value: task.taskRegion.isEmpty
+                            ? selectedTaskRegion
+                            : task.taskRegion,
+                        style: titleStyle,
+                        onChanged: (String value) {
+                          setState(() {
+                            this.selectedTaskRegion = value;
+                            task.taskRegion = value;
+                            task.taskRegionColor = regionColors[regions.indexOf(value)];
+                          });
+                        },
+                        items: snapshot.data?.map((taskRegion) {
+                              return DropdownMenuItem<String>(
+                                value: taskRegion,
+                                child: Text(taskRegion, style: titleStyle),
+                              );
+                            })?.toList() ??
+                            // Holding container while the taskRegionList is null during retrieval
+                            <String>[ // Checks to avoid duplicate string while waiting
+                              (task.taskRegion.isEmpty) ? Strings.noTaskRegion : task.taskRegion
+                            ].map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value, style: titleStyle),
+                              );
+                            }).toList())),
+                subtitle: Text("Related Task Region"),
+                trailing: Icon(Icons.auto_awesome_mosaic),
+              );
+            },
+          ), // Related Task Region
           Padding(
             padding: EdgeInsets.all(_minPadding),
             child: RaisedButton(
@@ -228,6 +282,20 @@ class TaskState extends State<NewTask> {
     task.task = taskController.text;
   }
 
+  Future<List<String>> _getTaskRegions(var regions) async {
+    var taskRegionList = await databaseHelper.getTaskRegionList();
+
+    for (int i = 0; i < taskRegionList.length; i++) {
+      String region = taskRegionList[i].taskRegion;
+      if (!regions.contains(region)) {
+        regions.add(taskRegionList[i].taskRegion);
+        this.regionColors.add(taskRegionList[i].regionColor);
+      }
+    }
+
+    return regions;
+  }
+
   // InputConstraints
   bool _checkNotNull() {
     bool res;
@@ -262,10 +330,10 @@ class TaskState extends State<NewTask> {
     if (_checkNotNull() == true) {
       if (task.id != null) {
         // Update Operation
-        result = await helper.updateTask(task);
+        result = await databaseHelper.updateTask(task);
       } else {
         // Insert Operation
-        result = await helper.insertTask(task);
+        result = await databaseHelper.insertTask(task);
       }
 
       todoState.updateListView();
@@ -289,7 +357,7 @@ class TaskState extends State<NewTask> {
             actions: <Widget>[
               RawMaterialButton(
                 onPressed: () async {
-                  await helper.deleteTask(task.id);
+                  await databaseHelper.deleteTask(task.id);
                   todoState.updateListView();
                   Navigator.pop(context);
                   Navigator.pop(context);
@@ -302,7 +370,8 @@ class TaskState extends State<NewTask> {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text("No",
+                child: Text(
+                  "No",
                   style: TextStyle(color: Theme.of(context).primaryColor),
                 ),
               )

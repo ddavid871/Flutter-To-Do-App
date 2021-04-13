@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_tasks/utilities/time_input.dart';
 import 'package:flutter_tasks/utilities/est_time_picker.dart';
 import 'package:intl/intl.dart';
@@ -191,5 +192,13 @@ class Utils {
       }
       return "${hourValue}s, ${minValue}s";
     }
+  }
+
+  Color getColor(String hexColor) {
+    return Color(int.parse(hexColor, radix: 16));
+  }
+
+  Color getDimColor(String hexColor) {
+    return Color(int.parse(hexColor, radix: 16)).withOpacity(0.5);
   }
 }

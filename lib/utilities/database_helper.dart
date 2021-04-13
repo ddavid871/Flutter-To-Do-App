@@ -25,6 +25,7 @@ class DatabaseHelper {
   static final colEstTime = "estTime";
   static final colEstTimeHour = "estTimeHour";
   static final colEstTimeMinute = "estTimeMinute";
+  static final colTaskRegionColor = "taskRegionColor";
   static final colStatus = "status";
 
   // For taskRegionTable
@@ -79,6 +80,8 @@ class DatabaseHelper {
             $colEstTime TEXT,
             $colEstTimeHour INTEGER,
             $colEstTimeMinute INTEGER,
+            $colTaskRegion TEXT,
+            $colTaskRegionColor TEXT,
             $colStatus TEXT
           )
           ''');

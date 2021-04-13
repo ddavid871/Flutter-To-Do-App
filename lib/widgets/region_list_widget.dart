@@ -6,12 +6,14 @@ class RegionListWidget extends StatelessWidget {
     this.title,
     this.sub1,
     this.sub2,
+    this.color,
     this.trailing,
   }) : super(key: key);
 
   final String title;
   final String sub1;
   final String sub2;
+  final Widget color;
   final Widget trailing;
 
   @override
@@ -39,18 +41,20 @@ class RegionListWidget extends StatelessWidget {
                       color: Colors.grey,
                       fontSize: 15),
                 ),
-                Text(
-                  '$sub2',
-                  style: TextStyle(
-                      fontFamily: 'Lato',
-                      fontStyle: FontStyle.italic,
-                      color: Colors.grey,
-                      fontSize: 15),
-                ),
+                Row(children: <Widget>[
+                  color,
+                  Text(
+                    '$sub2',
+                    style: TextStyle(
+                        fontFamily: 'Lato',
+                        fontStyle: FontStyle.italic,
+                        color: Colors.grey,
+                        fontSize: 15),
+                  )
+                ]),
               ],
             ),
           ),
-          // FIXME - add widget to display color
           trailing,
         ]));
   }

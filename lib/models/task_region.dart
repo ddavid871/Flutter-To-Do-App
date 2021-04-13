@@ -7,6 +7,7 @@ class TaskRegion {
   String _regionEndTime;
   String _regionRRuleOption;
   String _regionRRule;
+  String _regionColor;
 
   /* EXAMPLE
   TimeRegion(
@@ -18,8 +19,8 @@ class TaskRegion {
         text: 'Reserved'));
  */
 
-  TaskRegion(this._taskRegion, this._regionStartDate, this._regionStartTime, this._regionEndTime, this._regionRRuleOption, this._regionRRule);
-  TaskRegion.withId(this._id, this._taskRegion, this._regionStartDate, this._regionStartTime, this._regionEndTime, this._regionRRuleOption, this._regionRRule);
+  TaskRegion(this._taskRegion, this._regionStartDate, this._regionStartTime, this._regionEndTime, this._regionRRuleOption, this._regionRRule, this._regionColor);
+  TaskRegion.withId(this._id, this._taskRegion, this._regionStartDate, this._regionStartTime, this._regionEndTime, this._regionRRuleOption, this._regionRRule, this._regionColor);
 
   int get id => _id;
   String get taskRegion => _taskRegion;
@@ -28,6 +29,7 @@ class TaskRegion {
   String get regionEndTime => _regionEndTime;
   String get regionRRuleOption => _regionRRuleOption;
   String get regionRRule => _regionRRule;
+  String get regionColor => _regionColor;
 
   set taskRegion(String newTaskRegion) {
     if (newTaskRegion.length <= 255) {
@@ -39,6 +41,7 @@ class TaskRegion {
   set regionEndTime(String newRegionEndTime) => this._regionEndTime = newRegionEndTime;
   set regionRRuleOption(String newRegionRRuleOption) => this._regionRRuleOption = newRegionRRuleOption;
   set regionRRule(String newRegionRRule) => this._regionRRule = newRegionRRule;
+  set regionColor(String newRegionColor) => this._regionColor = newRegionColor;
 
   // Convert Task Region object into Map object
   Map<String, dynamic> toMap() {
@@ -50,6 +53,7 @@ class TaskRegion {
     map['regionEndTime'] = _regionEndTime;
     map['regionRRuleOption'] = _regionRRuleOption;
     map['regionRRule'] = _regionRRule;
+    map['regionColor'] = _regionColor;
     return map;
   }
 
@@ -62,5 +66,6 @@ class TaskRegion {
     this._regionEndTime = map['regionEndTime'];
     this._regionRRuleOption = map['regionRRuleOption'];
     this._regionRRule = map['regionRRule'];
+    this._regionColor = map['regionColor'];
   }
 }

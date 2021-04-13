@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_tasks/models/task_region.dart';
 import 'package:flutter_tasks/utilities/database_helper.dart';
 import 'package:flutter_tasks/utilities/strings.dart';
@@ -50,7 +51,8 @@ class TaskRegionState extends State<NewTaskRegion> {
   var regionStartTime = "Pick Start Time";
   var regionEndTime = "Pick End Time";
   var repeatRRule = Strings.rruleNoRepeat;
-  var regionColor = ""; // fixme
+  Color regionColor = Colors.limeAccent;
+
   var _minPadding = 10.0;
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay(minute: null, hour: null);
@@ -72,23 +74,50 @@ class TaskRegionState extends State<NewTaskRegion> {
       ),
       body: Container(
           child: ListView(children: <Widget>[
-        Padding(
-          padding: EdgeInsets.all(_minPadding),
-          child: TextField(
-            controller: itemTitleController,
-            decoration: InputDecoration(
-                hintText: "Insert Task Region Title",
-                hintStyle: TextStyle(
-                    fontSize: 18,
-                    fontFamily: "Lato",
-                    fontStyle: FontStyle.italic,
-                    color: Colors.grey)),
-            onChanged: (value) {
-              updateTaskRegion();
-            },
-          ),
-        ),
-        // Task Region Title
+        Row(children: <Widget>[
+          Expanded(
+              child: Padding(
+                  padding: EdgeInsets.all(_minPadding),
+                  child: TextField(
+                    controller: itemTitleController,
+                    decoration: InputDecoration(
+                        hintText: "Insert Task Region Title",
+                        hintStyle: TextStyle(
+                            fontSize: 18,
+                            fontFamily: "Lato",
+                            fontStyle: FontStyle.italic,
+                            color: Colors.grey)),
+                    onChanged: (value) {
+                      updateTaskRegion();
+                    },
+                  ))),
+          Padding(
+              padding: EdgeInsets.all(_minPadding),
+              child: FlatButton(
+                minWidth: 30,
+                height: 40,
+                padding: EdgeInsets.all(5),
+                color: (taskRegion.regionColor.isEmpty) ? _getAndSetDefaultColor() : utility.getColor(taskRegion.regionColor),
+                textColor: Colors.black,
+                child: Text("Color"),
+                onPressed: () {
+                  // https://pub.dev/packages/flutter_colorpicker
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Select a color'),
+                          content: SingleChildScrollView(
+                            child: BlockPicker(
+                              pickerColor: this.regionColor,
+                              onColorChanged: _changeColor,
+                            ),
+                          ),
+                        );
+                      });
+                },
+              )),
+        ]), // Task Region Title
         ListTile(
           title: taskRegion.regionStartDate.isEmpty
               ? Text(
@@ -101,14 +130,14 @@ class TaskRegionState extends State<NewTaskRegion> {
           onTap: () async {
             var pickedStartDate =
                 await utility.selectDate(context, taskRegion.regionStartDate);
+
             if (pickedStartDate != null && pickedStartDate.isNotEmpty)
               setState(() {
                 this.regionStartDate = pickedStartDate.toString();
                 taskRegion.regionStartDate = regionStartDate;
               });
           },
-        ),
-        // Task Region Start Date
+        ), // Task Region Start Date
         Row(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
           Expanded(
             child: ListTile(
@@ -152,8 +181,7 @@ class TaskRegionState extends State<NewTaskRegion> {
               },
             ),
           ),
-        ]),
-        // Task Region Start/End Time
+        ]), // Task Region Start/End Time
         ListTile(
           title: DropdownButton<String>(
             value: taskRegion.regionRRuleOption.isEmpty
@@ -261,6 +289,18 @@ class TaskRegionState extends State<NewTaskRegion> {
         return '';
         break;
     }
+  }
+
+  void _changeColor(Color color) => setState(() {
+    regionColor = color;
+    taskRegion.regionColor = regionColor.value.toRadixString(16); // Hex string
+  });
+
+  Color _getAndSetDefaultColor() {
+    setState(() {
+      taskRegion.regionColor = this.regionColor.value.toRadixString(16); // Hex string
+    });
+    return this.regionColor;
   }
 
   void updateTaskRegion() {

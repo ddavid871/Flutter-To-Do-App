@@ -7,6 +7,7 @@ class TaskListWidget extends StatelessWidget {
     this.sub1,
     this.sub2,
     this.delete,
+    this.color,
     this.trailing,
     this.status,
   }) : super(key: key);
@@ -15,6 +16,7 @@ class TaskListWidget extends StatelessWidget {
   final String sub1;
   final String sub2;
   final Widget delete;
+  final Widget color;
   final Widget trailing;
   final String status;
 
@@ -43,14 +45,16 @@ class TaskListWidget extends StatelessWidget {
                       color: Colors.grey,
                       fontSize: 15),
                 ),
-                Text(
-                  '$status',
-                  style: TextStyle(
-                      fontFamily: 'Lato',
-                      fontStyle: FontStyle.italic,
-                      color: Theme.of(context).primaryColor,
-                      fontSize: 15),
-                ),
+                Row(children: <Widget>[
+                   color,
+                    Text(
+                      '$status',
+                      style: TextStyle(
+                          fontFamily: 'Lato',
+                          fontStyle: FontStyle.italic,
+                          color: Theme.of(context).primaryColor,
+                         fontSize: 15),
+                  )]),
               ],
             ),
           ),

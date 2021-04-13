@@ -4,6 +4,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tasks/models/calendar_settings.dart';
+import 'package:flutter_tasks/models/task.dart';
 import 'package:flutter_tasks/models/task_region.dart';
 import 'package:flutter_tasks/screens/calendar_settings.dart';
 import 'package:flutter_tasks/utilities/database_helper.dart';
@@ -24,6 +25,7 @@ class CalendarBoardState extends State<CalendarWidget> {
   final homeScaffold = GlobalKey<ScaffoldState>();
 
   List<Meeting> eventList; // TODO
+  List<Meeting> taskList;
   List<TimeRegion> specialRegionsList;
   int count = 0;
 
@@ -31,14 +33,24 @@ class CalendarBoardState extends State<CalendarWidget> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO - do same for other lists
+    bool updated = false;
+    if (eventList == null) {
+      eventList = List<Meeting>();
+      updated = true;
+    }
+    if (taskList == null) {
+      taskList = List<Meeting>();
+      updated = true;
+    }
     if (specialRegionsList == null) {
       specialRegionsList = List<TimeRegion>();
-      updateCalendarView();
+      updated = true;
     }
     if (calendarSettings == null) {
       calendarSettings = new CalendarSettings(0, 1);
     }
+    if (updated) updateCalendarView();
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -90,6 +102,18 @@ class CalendarBoardState extends State<CalendarWidget> {
   void updateCalendarView() {
     final Future<Database> dbFuture = databaseHelper.initializeDatabase();
 
+    // Add tasks
+    dbFuture.then((database) {
+      Future<List<Task>> taskListFuture = databaseHelper.getInCompleteTaskList();
+      taskListFuture.then((taskList) {
+        setState(() {
+          this.taskList = _getTasks(taskList);
+          this.count = taskList.length;
+        });
+      });
+    });
+
+    // Add regions
     dbFuture.then((database) {
       Future<List<TaskRegion>> taskRegionListFuture = databaseHelper.getTaskRegionList();
       taskRegionListFuture.then((taskRegionList) {
@@ -111,13 +135,12 @@ class CalendarBoardState extends State<CalendarWidget> {
       TimeOfDay timeStart = utility.getTimeOfDay(taskRegion.regionStartTime);
       TimeOfDay timeEnd = utility.getTimeOfDay(taskRegion.regionEndTime);
 
-
       regions.add(TimeRegion(
         startTime: DateTime(startDate.year, startDate.month, startDate.day, timeStart.hour, timeStart.minute),
         endTime: DateTime(startDate.year, startDate.month, startDate.day, timeEnd.hour, timeEnd.minute),
         recurrenceRule: taskRegion.regionRRule,
         textStyle: TextStyle(color: Colors.black, fontSize: 10),
-        color: Color(0xffbD3D3D3), // fixme - Add color picker
+        color: utility.getDimColor(taskRegion.regionColor),
         text: '${taskRegion.taskRegion}',
       ));
     }
@@ -125,30 +148,30 @@ class CalendarBoardState extends State<CalendarWidget> {
     return regions;
   }
 
-  /* EXAMPLES
-  MeetingDataSource _getCalendarDataSource() {
-    List<Meeting> meetings = <Meeting>[];
-    meetings.add(Meeting(
-        eventName: 'Capstone',
-        from: DateTime(2021, 4, 5, 8),
-        to: DateTime(2021, 4, 5, 10),
-        background: Colors.green,
-        isAllDay: false,
-        recurrenceRule: 'FREQ=DAILY;BYDAY=SA,SU;INTERVAL=1;COUNT=8')
-    );
-    meetings.add(Meeting(
-        eventName: 'Work',
-        from: DateTime(2021, 4, 5, 10),
-        to: DateTime(2021, 4, 5, 16),
-        background: Colors.blue,
-        isAllDay: false,
-        recurrenceRule: 'FREQ=DAILY;BYDAY=SA,SU;INTERVAL=1;')
-    );
-    return MeetingDataSource(meetings);
-  }
-  */
+  // TODO - get Task due dates and put on calendar as all-day events?
+  List<Meeting> _getTasks(List<Task> taskList) {
+    final List<Meeting> taskMeetings = <Meeting>[];
 
-  // fixme - move to database
+    for (int i = 0; i < taskList.length; i++) {
+      Task task = taskList[i];
+
+      DateTime startDate = utility.getDateTime(task.date);
+      TimeOfDay timeStart = utility.getTimeOfDay(task.time);
+      TimeOfDay timeEnd = utility.getTimeOfDay(task.time);
+
+      taskMeetings.add(Meeting(
+        eventName: task.task + " DUE",
+        from: DateTime(startDate.year, startDate.month, startDate.day, timeStart.hour, timeStart.minute),
+        to: DateTime(startDate.year, startDate.month, startDate.day, timeEnd.hour, timeEnd.minute + 30),
+        background: Colors.red,
+        isAllDay: false, // true ?
+      ));
+    }
+
+    return taskMeetings;
+  }
+
+  // fixme - move meetings to database
   // https://www.textmagic.com/free-tools/rrule-generator
   List<Meeting> _getDataSource() {
     eventList = <Meeting>[];
@@ -166,9 +189,7 @@ class CalendarBoardState extends State<CalendarWidget> {
         background: Color(0xFF0F8644),
         isAllDay: false,
         recurrenceRule: 'FREQ=DAILY')
-    );
-    */
-    // TODO - get Task due dates and put on calendar as all-day events?
+    ); */
 
     eventList.add(Meeting(
         eventName: 'Capstone',
@@ -188,7 +209,7 @@ class CalendarBoardState extends State<CalendarWidget> {
         recurrenceRule:
             'FREQ=WEEKLY;BYDAY=TU,TH;INTERVAL=1;UNTIL=20210423T060000Z'));
 
-    return eventList;
+    return eventList + taskList;
   }
 }
 
